@@ -122,7 +122,7 @@ namespace LoR_AutoLocalize
                         var localizePassives = new PassiveDescRoot() { descList = new List<PassiveDesc>() };
                         foreach (var passive in passiveData.list)
                         {
-                            localizePassives.descList.Add(new PassiveDesc() { _id = passive._id, desc = passive.desc });
+                            localizePassives.descList.Add(new PassiveDesc() { _id = passive._id, desc = passive.desc, name = passive.name });
                         }
                         new XmlSerializer(typeof(PassiveDescRoot)).Serialize(xmlList[i], localizePassives);
                         break;
