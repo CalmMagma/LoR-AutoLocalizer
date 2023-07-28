@@ -56,29 +56,58 @@ namespace LoR_AutoLocalize
                 } else Console.WriteLine("! CardInfo.xml was not found (it will not be localized)");
 
 
-                if (File.Exists("BookStory.xml"))
+                bool storyExists = File.Exists("BookStory.xml");
+                bool librarianEquipExists = File.Exists("EquipPage_Librarian.xml");
+                bool enemyEquipExists = File.Exists("EquipPage_Enemy.xml");
+                if (storyExists || librarianEquipExists || enemyEquipExists)
                 {
-                    var bookDescData = new XmlSerializer(typeof(BookDescRoot)).Deserialize(File.OpenRead("BookStory.xml")) as BookDescRoot;
+                    var bookDescData = storyExists ? new XmlSerializer(typeof(BookDescRoot)).Deserialize(File.OpenRead("BookStory.xml")) as BookDescRoot : new BookDescRoot();
                     Directory.CreateDirectory(h + "/Books");
                     var file = File.Create(h + "/Books/BookDesc.xml");
 
                     Console.WriteLine("> Localizing " + file.Name);
 
-                    if (File.Exists("EquipPage_Librarian.xml"))
+                    if (librarianEquipExists)
                     {
                         var keypageData = new XmlSerializer(typeof(BookXmlRoot)).Deserialize(File.OpenRead("EquipPage_Librarian.xml")) as BookXmlRoot;
                         foreach (var guy in keypageData.bookXmlList)
                         {
                             var feller = bookDescData.bookDescList.Find(x => x.bookID == guy._id);
-                            if (feller != null) feller.bookName = guy.InnerName;
+                            if (feller != null)
+                            {
+                                feller.bookName = guy.InnerName;
+                            }
+                            else
+                            {
+                                feller = new BookDesc { bookID = guy._id, bookName = guy.InnerName, passives = new List<string>(), texts = new List<string>() };
+                                bookDescData.bookDescList.Add(feller);
+                            }
                         }
-                    } else Console.WriteLine("! EquipPage_Librarian.xml not found- key page names may not be localized properly.");
+                    } else Console.WriteLine("! EquipPage_Librarian.xml not found- librarian key page names (if they exist) may not be localized properly.");
+
+                    if (enemyEquipExists)
+                    {
+                        var keypageData = new XmlSerializer(typeof(BookXmlRoot)).Deserialize(File.OpenRead("EquipPage_Enemy.xml")) as BookXmlRoot;
+                        foreach (var guy in keypageData.bookXmlList)
+                        {
+                            var feller = bookDescData.bookDescList.Find(x => x.bookID == guy._id);
+                            if (feller != null)
+                            {
+                                feller.bookName = guy.InnerName;
+                            }
+                            else
+                            {
+                                feller = new BookDesc { bookID = guy._id, bookName = guy.InnerName, passives = new List<string>(), texts = new List<string>() };
+                                bookDescData.bookDescList.Add(feller);
+                            }
+                        }
+                    } else Console.WriteLine("! EquipPage_Enemy.xml not found- enemy key page names (if they exist) may not be localized properly.");
 
                     new XmlSerializer(typeof(BookDescRoot)).Serialize(file, bookDescData);
 
                     Console.WriteLine("- Localized " + file.Name);
                     file.Close();
-                } else Console.WriteLine("! EquipPage_Librarian.xml was not found (it will not be localized)");
+                } else Console.WriteLine("! BookStory.xml, EquipPage_Librarian.xml and EquipPage_Enemy.xml were all not found (key pages will not be localized)");
 
 
                 if (File.Exists("EnemyUnitInfo.xml"))
