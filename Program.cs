@@ -61,7 +61,7 @@ namespace LoR_AutoLocalize
                 bool enemyEquipExists = File.Exists("EquipPage_Enemy.xml");
                 if (storyExists || librarianEquipExists || enemyEquipExists)
                 {
-                    var bookDescData = storyExists ? new XmlSerializer(typeof(BookDescRoot)).Deserialize(File.OpenRead("BookStory.xml")) as BookDescRoot : new BookDescRoot();
+                    var bookDescData = storyExists ? new XmlSerializer(typeof(BookDescRoot)).Deserialize(File.OpenRead("BookStory.xml")) as BookDescRoot : new BookDescRoot { bookDescList = new List<BookDesc>() };
                     Directory.CreateDirectory(h + "/Books");
                     var file = File.Create(h + "/Books/BookDesc.xml");
 
