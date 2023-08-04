@@ -112,9 +112,9 @@ namespace LoR_AutoLocalize
 
                 if (File.Exists("EnemyUnitInfo.xml"))
                 {
-                    Directory.CreateDirectory(h + "/CharacterName");
+                    Directory.CreateDirectory(h + "/CharactersName");
                     var enemyUnitData = new XmlSerializer(typeof(EnemyUnitClassRoot)).Deserialize(File.OpenRead("EnemyUnitInfo.xml")) as EnemyUnitClassRoot;
-                    var file = File.Create(h + "/CharacterName/Characters.xml");
+                    var file = File.Create(h + "/CharactersName/Characters.xml");
                     Console.WriteLine("> Localizing " + file.Name);
 
                     var localizeChars = new CharactersNameRoot() { nameList = new List<CharacterName>() };
@@ -191,42 +191,6 @@ namespace LoR_AutoLocalize
                 Console.ReadLine();
             }
 
-            /*
-            for (int i = 0; i < 7; i++)
-            {
-                
-                switch (i)
-                {
-                    case 0:
-                        
-                        break;
-
-                    case 1:
-                        
-                        break;
-
-                    case 2:
-                        
-                        break;
-
-                    case 3:
-                        
-
-                    case 4:
-
-                        break;
-
-                    case 5:
-                        
-                        break;
-
-                    case 6:
-                       
-                        break;
-                }
-                
-            }
-            */
             Console.WriteLine("Finished auto-localization! Press ENTER to close this program...");
             Console.ReadLine();
         }
